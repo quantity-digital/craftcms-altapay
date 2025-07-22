@@ -1,0 +1,40 @@
+{% import "_includes/forms" as forms %}
+  <div class="flex-fields">
+    {{
+      forms.autosuggestField({
+        label: "Username"|t('altapay'),
+        name: 'username',
+        value: settings.username,
+        suggestEnvVars: true,
+        required: true,
+        errors: settings.getErrors('username'),
+        fieldClass: "width-50",
+      })
+    }}
+
+    {{
+      forms.autosuggestField({
+        label: "Password"|t('altapay'),
+        name: 'password',
+        value: settings.password,
+        suggestEnvVars: true,
+        required: true,
+        errors: settings.getErrors('password'),
+        fieldClass: "width-50",
+      })
+    }}
+  </div>
+  <hr>
+  <div class="flex-fields">
+      {{
+      forms.autosuggestField({
+        label: "Shop"|t('klaviyo'),
+        name: 'shop',
+        value: settings.shop,
+        suggestEnvVars: true,
+        required: true,
+        errors: settings.getErrors('shop'),
+      })
+    }}
+  </div>
+

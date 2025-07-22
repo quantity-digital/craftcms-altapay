@@ -1,0 +1,48 @@
+{
+	"name": "quantity-digital/craftcms-altapay",
+	"description": "Altapay gateway integration for Craft Commerce 5",
+	"type": "craft-plugin",
+	"version": "5.0.0",
+	"keywords": [
+		"craft",
+		"cms",
+		"craftcms",
+		"craft-plugin",
+		"commerce",
+		"craft-commerce",
+		"craft-commerce-plugin",
+		"altapay",
+		"payment",
+		"gateway",
+		"integration"
+	],
+	"support": {
+		"email": "mail@quantity.dk",
+		"docs": "https://github.com/quantity-digital/craftcms-altapay/wiki",
+		"issues": "https://github.com/quantity-digital/craftcms-altapay/issues"
+	},
+	"license": "GNU",
+	"authors": [
+		{
+			"name": "Quantity Digital A/S",
+			"homepage": "https://quantity.dk"
+		}
+	],
+	"require": {
+		"craftcms/cms": "^5.0",
+		"craftcms/commerce": "^5.0",
+		"altapay/api-php": "^3.5"
+	},
+	"autoload": {
+		"psr-4": {
+			"QD\\altapay\\": "src/"
+		}
+	},
+	"extra": {
+		"name": "Altapay for Craft Commerce",
+		"handle": "craftcms-altapay",
+		"class": "QD\\altapay\\Altapay",
+		"hasCpSettings": false,
+		"hasCpSection": false
+	}
+}
