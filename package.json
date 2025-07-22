@@ -1,0 +1,11 @@
+{
+	"name": "surisuri-webshop",
+	"private": true,
+	"version": "4.0.1",
+	"scripts": {
+		"release": "commit-and-tag-version"
+	},
+	"devDependencies": {
+		"commit-and-tag-version": "^12.5.1"
+	}
+}
