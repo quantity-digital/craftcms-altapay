@@ -4,9 +4,11 @@ namespace QD\altapay\config;
 
 use Craft;
 use craft\commerce\services\Gateways;
+use craft\commerce\services\OrderHistories;
 use craft\events\RegisterComponentTypesEvent;
 use QD\altapay\domains\gateways\PaymentGateway;
 use QD\altapay\domains\gateways\SubscriptionGateway;
+use QD\altapay\services\EventService;
 use yii\base\Event;
 
 trait Events
@@ -30,9 +32,11 @@ trait Events
       Gateways::EVENT_REGISTER_GATEWAY_TYPES,
       function (RegisterComponentTypesEvent $event) {
         $event->types[] = PaymentGateway::class;
-        $event->types[] = SubscriptionGateway::class;
+        // $event->types[] = SubscriptionGateway::class;
       }
     );
+
+    Event::on(OrderHistories::class, OrderHistories::EVENT_ORDER_STATUS_CHANGE, [EventService::class, 'eventOrderStatusChange']);
 
     // Event::on(Elements::class, Elements::EVENT_AFTER_SAVE_ELEMENT, [ElementEvents::class, 'save']);
   }

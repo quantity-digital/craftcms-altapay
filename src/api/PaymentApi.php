@@ -128,7 +128,7 @@ class PaymentApi extends Api
     return $order;
   }
 
-  public static function captureReservation(Transaction $transaction, string $reference): Response
+  public static function captureReservation(string $reference): Response
   {
     $transaction = TransactionService::getTransactionByReference($reference);
     if (!$transaction) throw new Exception("Authorized transaction not found", 1);
@@ -161,8 +161,6 @@ class PaymentApi extends Api
       ->setPayload($payload)
       ->post();
 
-    // TODO: Handle error state
-
     return $response;
   }
 
@@ -178,10 +176,9 @@ class PaymentApi extends Api
   public static function getTerminals(): array
   {
     $response = (new Api())->setMethod('getTerminals')->get();
+    if (!$response->success) return ['Title' => 'API ERROR'];
 
-    // TODO: Handle error state
-
-    return $response->data->Terminals->Terminal ?? [];
+    return $response->data->Terminals->Terminal ?? ['Title' => 'API ERROR'];
   }
 
   //* Refund

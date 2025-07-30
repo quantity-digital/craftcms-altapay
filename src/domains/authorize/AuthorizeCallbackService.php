@@ -9,7 +9,6 @@ use Exception;
 use QD\altapay\config\Data;
 use QD\altapay\services\TransactionService;
 use Throwable;
-use craft\commerce\Plugin as Commerce;
 
 class AuthorizeCallbackService
 {

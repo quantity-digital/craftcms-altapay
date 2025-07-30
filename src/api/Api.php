@@ -7,6 +7,7 @@ use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use QD\altapay\Altapay;
+use QD\altapay\config\Data;
 use QD\altapay\config\Response;
 use QD\altapay\config\Utils;
 
@@ -138,11 +139,17 @@ class Api
       // Convert XML to PHP array
       $array = json_decode(json_encode($xml), true);
 
+      if (in_array($array['Body']['Result'], [Data::RESPONSE_ERROR, Data::RESPONSE_FAIL])) {
+        $code = self::_code($array);
+        $message = self::_message($array);
+        return Response::error(null, null, $code, $message);
+      }
+
       // Check for errors in the response
       if ($array['Header']['ErrorCode'] !== '0') {
-        $errorMessage = $array['Header']['ErrorMessage'] ?? 'Unknown error';
-        $errorCode = $array['Header']['ErrorCode'] ?? 'Unknown error code';
-        throw new Exception("AltaPay ({$errorCode}): {$errorMessage}", 1);
+        $code = self::_code($array);
+        $message = self::_message($array);
+        return Response::error(null, null, $code, $message);
       }
 
       // Return
@@ -159,7 +166,30 @@ class Api
 
       return Response::success($data, $meta);
     } catch (RequestException $e) {
-      return Response::error($e->getMessage(), 1);
+      return Response::error($e->getMessage(), 1, 500, 'Unknown');
     }
+  }
+
+  private static function _code($array)
+  {
+    $header = isset($array['Header']['ErrorCode']) && $array['Header']['ErrorCode'] !== '0' ? $array['Header']['ErrorCode'] : null;
+    if ($header) return $header;
+
+
+    $merchant = $array['Body']['MerchantErrorCode'] ?? null;
+    if ($merchant) return $merchant;
+
+    return 'Unknown';
+  }
+
+  private static function _message($array)
+  {
+    $header = $array['Header']['ErrorMessage'] ?? null;
+    if ($header) return implode(', ', $header);
+
+    $merchant = $array['Body']['MerchantErrorMessage'] ?? null;
+    if ($merchant) return $merchant;
+
+    return 'Unknown';
   }
 }

@@ -31,7 +31,7 @@ class AuthorizeResponse implements RequestResponseInterface
 
   public function getCode(): string
   {
-    if ($this->response->error) {
+    if ($this->error) {
       return (string) 500;
     }
 

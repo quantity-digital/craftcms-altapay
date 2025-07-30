@@ -54,7 +54,7 @@ class PaymentGateway extends Gateway
   //* Capture
   public function capture(Transaction $transaction, string $reference): RequestResponseInterface
   {
-    $response = CaptureService::execute($transaction, $reference);
+    $response = CaptureService::execute($reference);
     return $response;
   }
 
