@@ -17,7 +17,13 @@ trait Routes
   private function publicRoutes(): void
   {
     Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_SITE_URL_RULES, function (RegisterUrlRulesEvent $event) {
-      // $event->rules['api/v1/shop/migrate/variants'] = 'quantity-shop/migration/variants';
+      // Api
+
+      // Callback
+      $event->rules['callback/v1/altapay/payment/ok'] = 'craftcms-altapay/payment-callback/ok';
+      $event->rules['callback/v1/altapay/payment/fail'] = 'craftcms-altapay/payment-callback/fail';
+      $event->rules['callback/v1/altapay/payment/open'] = 'craftcms-altapay/payment-callback/open';
+      $event->rules['callback/v1/altapay/payment/notification'] = 'craftcms-altapay/payment-callback/notification';
     });
   }
 

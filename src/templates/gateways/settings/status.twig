@@ -1,0 +1,29 @@
+{% from "_includes/forms" import booleanMenuField, selectizeField %}
+<h2>Order status</h2>
+<div class="flex-fields">
+  <div class="field width-50">
+			{{ selectizeField({
+				first: true,
+				label: 'Status to capture'|t('commerce-quickpay'),
+				instructions: 'On what order status should the payment be captured'|t('commerce-quickpay'),
+				id: 'statusToCapture',
+				name: 'statusToCapture',
+				options : options.statuses,
+				value : gateway.statusToCapture ?? '',
+				errors: gateway.getErrors('statusToCapture') ?? null,
+			}) }}
+  </div>
+  <div class="field width-50">
+			{{ selectizeField({
+				first: true,
+				label: 'Status after capture'|t('commerce-quickpay'),
+				instructions: 'What status should the order be moved to after capture'|t('commerce-quickpay'),
+				id: 'statusAfterCapture',
+				name: 'statusAfterCapture',
+				options : options.statuses,
+				value : gateway.statusAfterCapture ?? '',
+				errors: gateway.getErrors('statusAfterCapture') ?? null,
+			}) }}
+  </div>
+</div>
+<hr/>
