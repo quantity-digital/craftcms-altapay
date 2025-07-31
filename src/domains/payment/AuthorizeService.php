@@ -50,6 +50,7 @@ class AuthorizeService
       ],
 
       'customer_info' => [
+        'cardholder_name' => 'Marcus Bjerringgaard',
         'username' => $customer->id ?: '',
         'email' => $customer->email ?: '',
         'billing_firstname' => $customer->firstName ?: '',
@@ -61,7 +62,10 @@ class AuthorizeService
         'callback_fail' => $url . 'callback/v1/altapay/payment/fail',
         'callback_open' => $url . 'callback/v1/altapay/payment/open',
         'callback_notification' => $url . 'callback/v1/altapay/payment/notification',
-      ]
+      ],
+
+      'fraud_service' => 'none',
+      'payment_source' => 'eCommerce',
     ];
 
     $response = PaymentApi::createPaymentRequest($payload);

@@ -46,10 +46,53 @@ class AuthorizeCallbackService
     return self::_redirect($redirect);
   }
 
-  public static function notification(string $callback, mixed $response)
+  public static function notification(mixed $response)
   {
-    // $response = PaymentApi::createPaymentRequest($transaction);
-    // return new PaymentResponse($response);
+    $parent = TransactionService::getTransactionByHash($response->transaction_info->transaction);
+    if (!$parent) throw new Exception("Parent transaction not found", 1);
+
+    if (TransactionService::isTransactionSuccessful($parent)) return;
+
+    $status = self::_status($response?->meta?->Body?->Result ?? '');
+    if (!$status) throw new Exception("Unknown response status", 1);
+
+    TransactionService::authorize($status, $response, $response->status, self::_code($status));
+  }
+
+  private static function _code($status): string
+  {
+    switch ($status) {
+      case Data::RESPONSE_SUCCESS:
+        return '200';
+      case Data::RESPONSE_ERROR:
+      case Data::RESPONSE_FAIL:
+        return '500';
+      case Data::RESPONSE_OPEN:
+        return '102';
+      default:
+        return '0';
+    }
+  }
+
+  private static function _status(string $result): string
+  {
+    switch ($result) {
+      case Data::RESPONSE_SUCCESS:
+        return RecordsTransaction::STATUS_SUCCESS;
+
+      case Data::RESPONSE_ERROR:
+      case Data::RESPONSE_FAIL:
+        return RecordsTransaction::STATUS_FAILED;
+
+      case Data::RESPONSE_OPEN:
+        return RecordsTransaction::STATUS_PROCESSING;
+
+      case Data::RESPONSE_PARTIAL_SUCCESS:
+        throw new Exception("Partial Success not implemented", 1);
+
+      default:
+        throw new Exception("Unknown response status: $result", 1);
+    }
   }
 
   private static function _redirect($url)

@@ -10,7 +10,7 @@ use craft\commerce\records\Transaction as RecordsTransaction;
 
 class TransactionService
 {
-  public static function authorize(string $status, object $response, string $msg = '', string $code = '')
+  public static function authorize(string $status, object $response, string $msg = '', string $code = ''): Transaction
   {
     $parent = self::getTransactionByHash($response->transaction_info->transaction);
     if (!$parent) throw new Exception("Parent transaction not found", 1);
@@ -34,7 +34,7 @@ class TransactionService
     return $transaction;
   }
 
-  public static function capture(string $status, object $response, string $msg = '', string $code = '')
+  public static function capture(string $status, object $response, string $msg = '', string $code = ''): Transaction
   {
     $parent = self::getTransactionByReference($response->payment_id);
     if (!$parent) throw new Exception("Parent transaction not found", 1);
@@ -64,6 +64,8 @@ class TransactionService
     return Commerce::getInstance()->getTransactions()->getTransactionById($id);
   }
 
+  public static function getLastChildTransactionById(int $id) {}
+
   public static function getTransactionByReference(string $reference): ?Transaction
   {
     return Commerce::getInstance()->getTransactions()->getTransactionByReference($reference);
@@ -79,23 +81,9 @@ class TransactionService
     return Commerce::getInstance()->getTransactions()->isTransactionSuccessful($transaction);
   }
 
-  public static function getSuccessfulTransaction($orderId)
+  public static function getSuccessfulTransaction(int $orderId): ?Transaction
   {
     $transactions = Commerce::getInstance()->getTransactions()->getAllTransactionsByOrderId($orderId);
-
-    // $parents = [];
-    // foreach ($transactions as $transaction) {
-    //   if ($transaction->parentId) {
-    //     $parents[] = $transaction->parentId;
-    //   }
-    // }
-
-    // Filter for successful authorize transactions that don't have children
-    // $validTransactions = array_filter($transactions, function ($transaction) use ($parents) {
-    //   return $transaction->type === RecordsTransaction::TYPE_AUTHORIZE &&
-    //     $transaction->status === RecordsTransaction::STATUS_SUCCESS &&
-    //     !in_array($transaction->id, $parents);
-    // });
 
     $validTransactions = array_filter($transactions, function ($transaction) {
       return $transaction->type === RecordsTransaction::TYPE_AUTHORIZE &&
@@ -116,7 +104,7 @@ class TransactionService
     return $validTransactions[0];
   }
 
-  public static function captureTransaction(Transaction $transaction)
+  public static function captureTransaction(Transaction $transaction): Transaction
   {
     $order = $transaction->getOrder();
     if (!$order) throw new Exception("Order not found for transaction", 1);
