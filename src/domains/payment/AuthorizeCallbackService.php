@@ -1,6 +1,6 @@
 <?php
 
-namespace QD\altapay\domains\authorize;
+namespace QD\altapay\domains\payment;
 
 use Craft;
 use craft\commerce\elements\Order;
@@ -49,7 +49,7 @@ class AuthorizeCallbackService
   public static function notification(string $callback, mixed $response)
   {
     // $response = PaymentApi::createPaymentRequest($transaction);
-    // return new AuthorizeResponse($response);
+    // return new PaymentResponse($response);
   }
 
   private static function _redirect($url)

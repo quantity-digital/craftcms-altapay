@@ -11,9 +11,9 @@ use craft\commerce\models\Transaction;
 use craft\commerce\Plugin as Commerce;
 use QD\altapay\api\PaymentApi;
 use QD\altapay\config\Data;
-use QD\altapay\domains\authorize\AuthorizeService;
-use QD\altapay\domains\capture\CaptureService;
-use QD\altapay\domains\refund\RefundService;
+use QD\altapay\domains\payment\AuthorizeService;
+use QD\altapay\domains\payment\CaptureService;
+use QD\altapay\domains\payment\RefundService;
 
 class PaymentGateway extends Gateway
 {

@@ -6,7 +6,7 @@ use Craft;
 use craft\web\Controller;
 use QD\altapay\config\Data;
 use QD\altapay\config\Utils;
-use QD\altapay\domains\authorize\AuthorizeCallbackService;
+use QD\altapay\domains\payment\AuthorizeCallbackService;
 
 use Exception;
 use Throwable;

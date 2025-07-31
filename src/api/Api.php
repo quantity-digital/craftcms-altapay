@@ -8,7 +8,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use QD\altapay\Altapay;
 use QD\altapay\config\Data;
-use QD\altapay\config\Response;
+use QD\altapay\api\ApiResponse;
 use QD\altapay\config\Utils;
 
 class Api
@@ -61,9 +61,9 @@ class Api
   /**
    * Undocumented function
    *
-   * @return Response
+   * @return ApiResponse
    */
-  public function get(): Response
+  public function get(): ApiResponse
   {
     // Validate if method has been defined
     if (!$this->method) throw new Exception('Method not set');
@@ -104,19 +104,19 @@ class Api
       ];
 
       // Body
-      // Unset "Result" as this i moved to the parent int he Response class
+      // Unset "Result" as this i moved to the parent int he ApiResponse class
       unset($array['Body']['Result']);
 
       // Convert body to object if needed
       $data = Utils::objectify($array['Body']) ?? null;
 
-      return Response::success($data, $meta);
+      return ApiResponse::success($data, $meta);
     } catch (RequestException $e) {
-      return Response::error($e->getMessage(), 1);
+      return ApiResponse::error($e->getMessage(), 1);
     }
   }
 
-  public function post(): Response
+  public function post(): ApiResponse
   {
     // Validate if method has been defined
     if (!$this->method) throw new Exception('Method not set');
@@ -139,17 +139,19 @@ class Api
       // Convert XML to PHP array
       $array = json_decode(json_encode($xml), true);
 
-      if (in_array($array['Body']['Result'], [Data::RESPONSE_ERROR, Data::RESPONSE_FAIL])) {
-        $code = self::_code($array);
-        $message = self::_message($array);
-        return Response::error(null, null, $code, $message);
-      }
-
       // Check for errors in the response
+      //? Altapay internal errors are placed in the Header
       if ($array['Header']['ErrorCode'] !== '0') {
         $code = self::_code($array);
         $message = self::_message($array);
-        return Response::error(null, null, $code, $message);
+        return ApiResponse::error(null, null, $code, $message);
+      }
+
+      // ? Merchant errors are placed in the Body
+      if (isset($array['Body']['Result']) && in_array($array['Body']['Result'], [Data::RESPONSE_ERROR, Data::RESPONSE_FAIL])) {
+        $code = self::_code($array);
+        $message = self::_message($array);
+        return ApiResponse::error(null, null, $code, $message);
       }
 
       // Return
@@ -164,9 +166,9 @@ class Api
       // Convert body to object if needed
       $data = Utils::objectify($array['Body']) ?? null;
 
-      return Response::success($data, $meta);
+      return ApiResponse::success($data, $meta);
     } catch (RequestException $e) {
-      return Response::error($e->getMessage(), 1, 500, 'Unknown');
+      return ApiResponse::error($e->getMessage(), 1, 500, 'Unknown');
     }
   }
 

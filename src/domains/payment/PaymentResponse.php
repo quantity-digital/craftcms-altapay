@@ -1,41 +1,38 @@
 <?php
 
-namespace QD\altapay\domains\authorize;
+namespace QD\altapay\domains\payment;
 
 use Craft;
 use craft\commerce\base\RequestResponseInterface;
 
-class AuthorizeResponse implements RequestResponseInterface
+class PaymentResponse implements RequestResponseInterface
 {
-  // @var
   protected mixed $response = [];
-  public string $message = '';
-  public bool $error = false;
+  public string $reference = '';
+
+  public bool $success = false;
 
   private string $_redirect = '';
   private bool $_processing = false;
-  private int $_code = 200;
 
-  public function __construct(mixed $response)
+  public function __construct(mixed $response, string $reference = '')
   {
     $this->response = $response;
+    $this->reference = $reference ?? '';
+    $this->success = $response->success ?? false;
 
-    if (!$this->response->success) $this->setError(true);
-    if ($response->data->Url) $this->setRedirect($response->data->Url);
+    $isRedirect = isset($response->data->Url) && isset($response->data->PaymentRequestId) && $response->data->Url && !$this->reference;
+    if ($isRedirect) $this->setRedirect($response->data->Url);
   }
 
   public function getTransactionReference(): string
   {
-    return '';
+    return $this->reference;
   }
 
   public function getCode(): string
   {
-    if ($this->error) {
-      return (string) 500;
-    }
-
-    return (string) $this->_code;
+    return (string) ($this->response->code ?? 0);
   }
 
   public function getData(): mixed
@@ -45,7 +42,7 @@ class AuthorizeResponse implements RequestResponseInterface
 
   public function getMessage(): string
   {
-    return $this->message;
+    return $this->response->message ?? '';
   }
 
   //* Success
@@ -55,7 +52,7 @@ class AuthorizeResponse implements RequestResponseInterface
       return false;
     }
 
-    if ($this->error) {
+    if (!$this->success) {
       return false;
     }
 
@@ -108,11 +105,6 @@ class AuthorizeResponse implements RequestResponseInterface
   //* Error
   public function isError(): bool
   {
-    return $this->error;
-  }
-
-  public function setError(bool $error): void
-  {
-    $this->error = $error;
+    return !$this->success;
   }
 }

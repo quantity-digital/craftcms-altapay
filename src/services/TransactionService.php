@@ -58,12 +58,6 @@ class TransactionService
     return $transaction;
   }
 
-  public static function refund()
-  {
-    // TODO: Implement
-    return 0;
-  }
-
   //* Utils
   public static function getTransactionById(int $id): ?Transaction
   {
@@ -89,18 +83,23 @@ class TransactionService
   {
     $transactions = Commerce::getInstance()->getTransactions()->getAllTransactionsByOrderId($orderId);
 
-    $parents = [];
-    foreach ($transactions as $transaction) {
-      if ($transaction->parentId) {
-        $parents[] = $transaction->parentId;
-      }
-    }
+    // $parents = [];
+    // foreach ($transactions as $transaction) {
+    //   if ($transaction->parentId) {
+    //     $parents[] = $transaction->parentId;
+    //   }
+    // }
 
     // Filter for successful authorize transactions that don't have children
-    $validTransactions = array_filter($transactions, function ($transaction) use ($parents) {
+    // $validTransactions = array_filter($transactions, function ($transaction) use ($parents) {
+    //   return $transaction->type === RecordsTransaction::TYPE_AUTHORIZE &&
+    //     $transaction->status === RecordsTransaction::STATUS_SUCCESS &&
+    //     !in_array($transaction->id, $parents);
+    // });
+
+    $validTransactions = array_filter($transactions, function ($transaction) {
       return $transaction->type === RecordsTransaction::TYPE_AUTHORIZE &&
-        $transaction->status === RecordsTransaction::STATUS_SUCCESS &&
-        !in_array($transaction->id, $parents);
+        $transaction->status === RecordsTransaction::STATUS_SUCCESS;
     });
 
     // If no transactions found, return null

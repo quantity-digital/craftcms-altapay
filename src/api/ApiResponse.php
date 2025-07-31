@@ -1,8 +1,8 @@
 <?php
 
-namespace QD\altapay\config;
+namespace QD\altapay\api;
 
-class Response
+class ApiResponse
 {
   public function __construct(
     public mixed $data = null,

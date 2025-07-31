@@ -7,7 +7,7 @@ use craft\base\Model;
 use craft\base\Plugin;
 use QD\altapay\config\Events;
 use QD\altapay\config\Routes;
-use QD\altapay\domains\settings\Settings;
+use QD\altapay\config\Settings;
 
 class Altapay extends Plugin
 {

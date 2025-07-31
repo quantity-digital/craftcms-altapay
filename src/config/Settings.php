@@ -1,6 +1,6 @@
 <?php
 
-namespace QD\altapay\domains\settings;
+namespace QD\altapay\config;
 
 use craft\base\Model;
 
