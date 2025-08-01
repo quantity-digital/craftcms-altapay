@@ -1,7 +1,7 @@
 {
 	"name": "surisuri-webshop",
 	"private": true,
-	"version": "4.0.1",
+	"version": "4.0.0",
 	"scripts": {
 		"release": "commit-and-tag-version"
 	},
