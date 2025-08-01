@@ -1,0 +1,15 @@
+{% from "_includes/forms" import selectizeField %}
+<div class="field">
+			{{ selectizeField({
+        required: true,
+				first: true,
+				label: 'Terminal'|t('commerce-quickpay'),
+				instructions: 'Select the terminal to use for this gateway'|t('commerce-quickpay'),
+				id: 'terminal',
+				name: 'terminal',
+				options : options.terminals,
+				value : gateway.terminal ?? '',
+				errors: gateway.getErrors('terminal') ?? null,
+			}) }}
+</div>
+<hr />
