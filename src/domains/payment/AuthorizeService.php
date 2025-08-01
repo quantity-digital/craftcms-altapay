@@ -201,7 +201,7 @@ class AuthorizeService
         'unitPrice' => Utils::amount($shipping),
         'taxAmount' => Utils::amount(0.00),
         'discount' => 0.00,
-        'goodsType' => 'shipping',
+        'goodsType' => 'shipment',
         'imageUrl' => '',
         'productUrl' => '',
       ];
