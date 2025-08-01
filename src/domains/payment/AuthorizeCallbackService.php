@@ -23,7 +23,6 @@ class AuthorizeCallbackService
 
     $redirect = self::_addQueryParam($order->returnUrl, 'status', $callback);
 
-    // TODO: if order is already paid, but no capture transaction exists, then create a capture transaction
     if ($order->getIsPaid()) return self::_redirect($redirect);
     if (TransactionService::isTransactionSuccessful($parent)) return self::_redirect($redirect);
 

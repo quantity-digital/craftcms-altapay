@@ -90,7 +90,6 @@ class PaymentCallbackController extends Controller
 
   private function _validate($response)
   {
-    //TODO: Extend this to check more validation
     if (!$response->transaction_info->order) {
       throw new Exception('Invalid response: Missing order reference', 1);
     }

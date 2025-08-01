@@ -47,8 +47,8 @@ class Utils
     return $decode;
   }
 
-  public static function amount($raw)
+  public static function amount(mixed $raw): float
   {
-    return (float) number_format($raw, 2, '.', '');
+    return (float) number_format((float) $raw, 2, '.', '');
   }
 }
