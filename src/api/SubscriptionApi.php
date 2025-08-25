@@ -12,8 +12,9 @@ class SubscriptionApi extends Api
   {
     return 'Not implemented';
   }
-  public static function setupSubscription()
+  public static function createSubscription(array $payload, $type = 'subscription')
   {
-    return 'Not implemented';
+    $payload['type'] = $type;
+    return PaymentApi::createPaymentRequest($payload);
   }
 }

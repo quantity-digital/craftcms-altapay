@@ -20,7 +20,7 @@ use craft\helpers\App;
 use craft\web\Response as WebResponse;
 use yii\base\NotSupportedException;
 
-trait PaymentTrait
+trait GatewayTrait
 {
   public function getPaymentFormHtml(array $params): string
   {

@@ -6,7 +6,6 @@ use Craft;
 use craft\commerce\base\Gateway;
 use craft\commerce\base\RequestResponseInterface;
 use craft\commerce\models\payments\BasePaymentForm;
-use craft\commerce\models\responses\Manual as ManualRequestResponse;
 use craft\commerce\models\Transaction;
 use craft\commerce\Plugin as Commerce;
 use QD\altapay\api\PaymentApi;
@@ -30,7 +29,7 @@ class PaymentGateway extends Gateway
     'Webhooks' => false,
   ];
 
-  use PaymentTrait;
+  use GatewayTrait;
 
   //* Settings
   public string $statusToCapture = Data::NULL_STRING;
